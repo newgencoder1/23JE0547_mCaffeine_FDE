@@ -6,7 +6,7 @@ A small internal web app that replaces the inbox-and-spreadsheet purchase-order 
 
 | | |
 |---|---|
-| **Live URL** | https://REPLACE-WITH-YOUR-SERVICE.onrender.com (free plan: the first request after 15 idle minutes can take about 50 s while it wakes up) |
+| **Live URL** | https://po-approval-23je0547.onrender.com (free plan: the first request after 15 idle minutes can take about 50 s while it wakes up) |
 | **Health check** | `<live URL>/health` |
 | **Stack** | Python 3.12 · Flask · Supabase Postgres + Supabase Storage (private bucket) · Render (Docker) · Tesseract OCR |
 
@@ -147,3 +147,5 @@ All rules live in **`app/permissions.py`** (one function per rule). The routes i
 ## 8. AI usage
 
 The project was built in one Claude chat session, used for the plan, code, tests and docs. I reviewed every file and the commit history shows the order of work. The unedited export is in `/ai-session/`, and the share link is listed there. Mistakes caught during the session included: OCR `--psm 6` dropping the boxed-grid labels (switched to `--psm 4`), the `hidden`-attribute CSS bug, `query_one` used for multi-row DELETEs (replaced with `execute`), and a quantity passed to Postgres as text (now `Decimal`). No inline autocomplete was used.
+
+Deployment was finished in a second session with Claude Code, because the first chat had no access to my machine, GitHub, Render or the live URL. That session pushed the existing commits, guided the Supabase and Render setup, and ran the live checks against the deployed app (401, 403, 404, 409, reject reason, resubmit, history, OCR fallback, signed PDF link). It made no code changes apart from this README. Its export is also in `/ai-session/`.
