@@ -78,3 +78,8 @@ DROP TRIGGER IF EXISTS trg_po_actions_append_only ON po_actions;
 CREATE TRIGGER trg_po_actions_append_only
     BEFORE UPDATE OR DELETE ON po_actions
     FOR EACH ROW EXECUTE FUNCTION po_actions_append_only();
+
+DROP TRIGGER IF EXISTS trg_po_actions_no_truncate ON po_actions;
+CREATE TRIGGER trg_po_actions_no_truncate
+    BEFORE TRUNCATE ON po_actions
+    FOR EACH STATEMENT EXECUTE FUNCTION po_actions_append_only();
