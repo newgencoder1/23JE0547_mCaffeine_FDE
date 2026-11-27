@@ -13,6 +13,6 @@ How to add it (do this last, after the final commit of code):
 
 ## Session 2: deployment (Claude Code)
 
-* **Unedited export:** `claude_code_session.md` in this folder (`/export` from Claude Code, no edits)
+* **Export:** `claude_code_session.jsonl` in this folder: the raw transcript from the Claude desktop app's session export, one JSON message per line. The only change is that my email address and the old Supabase keys and database password were replaced with `[REDACTED]` (16 places). Nothing else was edited.
 
 A second session was used because the first chat could not reach my machine, GitHub, Render or the live app. It pushed the existing commits, guided the Supabase and Render setup, ran the live checks, and updated the README with the live URL. Secrets shown during that session were replaced afterwards and no longer work.
