@@ -199,19 +199,27 @@ async function act(path, body, okMessage) {
   }
 
   document.getElementById("add-line").onclick = () => { document.getElementById("lines").appendChild(lineRow({}, true)); renumber(); };
-  document.getElementById("save").onclick = () => save();
-  document.getElementById("submit").onclick = async () => {
-    if (await save({ quiet: true })) await act("submit", {}, "Submitted for approval.");
+  // Ignore extra clicks while a request is in flight (a double click on Submit used to
+  // send a second save to the now-locked PO and show a confusing "locked" error).
+  const guarded = (fn) => async (e) => {
+    const btn = e.currentTarget;
+    if (btn.disabled) return;
+    btn.disabled = true;
+    try { await fn(); } finally { btn.disabled = false; }
   };
+  document.getElementById("save").onclick = guarded(() => save());
+  document.getElementById("submit").onclick = guarded(async () => {
+    if (await save({ quiet: true })) await act("submit", {}, "Submitted for approval.");
+  });
   document.getElementById("discard").onclick = async () => {
     if (!confirm("Discard this draft? The uploaded PDF will be deleted too.")) return;
     try { await api(`/api/pos/${poId}`, { method: "DELETE" }); window.location.href = "/"; }
     catch (err) { clearBanners(); banner(err.error); }
   };
-  document.getElementById("approve").onclick = () => act("approve", { remark: document.getElementById("remark").value }, "Approved.");
-  document.getElementById("reject").onclick = () => {
+  document.getElementById("approve").onclick = guarded(() => act("approve", { remark: document.getElementById("remark").value }, "Approved."));
+  document.getElementById("reject").onclick = guarded(async () => {
     const reason = document.getElementById("remark").value.trim();
     if (!reason) { clearBanners(); banner("Write a reason before rejecting."); showErrors({ reason: "A reason is required to reject." }); return; }
-    act("reject", { reason }, "Rejected. The creator can now fix and resubmit it.");
-  };
+    await act("reject", { reason }, "Rejected. The creator can now fix and resubmit it.");
+  });
 })();
