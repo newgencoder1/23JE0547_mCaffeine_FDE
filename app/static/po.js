@@ -68,7 +68,7 @@ function showErrors(fields = {}, lineErrors = {}) {
   });
 }
 
-function renderChecks(checks) {
+function renderChecks(checks, editable) {
   const ul = document.getElementById("checks");
   const items = [];
   const req = ["po_number", "po_date", "vendor_name"].filter((f) => checks.errors[f]);
@@ -90,9 +90,11 @@ function renderChecks(checks) {
     items.push(`<li class="note">• Line items not checked: this PO has no line items.</li>`);
   }
   items.push(`<li class="pass">✓ Duplicate PO numbers are refused by the database when you save</li>`);
-  items.push(checks.ok
-    ? `<li class="pass"><strong>Ready to submit.</strong></li>`
-    : `<li class="fail"><strong>Submit is blocked until the problems above are fixed.</strong></li>`);
+  if (editable) {
+    items.push(checks.ok
+      ? `<li class="pass"><strong>Ready to submit.</strong></li>`
+      : `<li class="fail"><strong>Submit is blocked until the problems above are fixed.</strong></li>`);
+  }
   ul.innerHTML = items.join("");
 }
 
@@ -117,7 +119,7 @@ function render() {
   document.getElementById("add-line").hidden = !p.can_edit;
 
   clearErrors();
-  renderChecks(po.checks);
+  renderChecks(po.checks, p.can_edit);
   if (p.can_edit) showErrors(po.checks.errors, po.checks.line_errors);
 
   document.getElementById("owner-actions").hidden = !(p.can_edit || p.can_submit);

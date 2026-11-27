@@ -3,6 +3,7 @@
   --brand: #6b3e26; --brand-ink: #fff; --ok: #1a7f37; --bad: #cf222e; --warn: #9a6700; --info: #0969da;
 }
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }  /* .actions{display:flex} must not override hidden */
 body { margin: 0; font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: var(--ink); background: var(--bg); }
 header.top { display: flex; align-items: center; justify-content: space-between; padding: 10px 24px; background: var(--brand); color: var(--brand-ink); }
 header.top a { color: inherit; text-decoration: none; font-weight: 600; }
@@ -29,6 +30,7 @@ th { font-size: 13px; color: var(--muted); font-weight: 600; }
 td.num, th.num { text-align: right; }
 tr.clickable { cursor: pointer; } tr.clickable:hover { background: var(--bg); }
 .items input { min-width: 70px; }
+.items td:nth-child(3) { width: 34%; } .items td:nth-child(2) { width: 13%; }
 .badge { font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 10px; border: 1px solid; }
 .badge-draft { color: var(--muted); } .badge-submitted { color: var(--info); }
 .badge-approved { color: var(--ok); } .badge-rejected { color: var(--bad); }
