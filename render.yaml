@@ -1,0 +1,26 @@
+# Render Blueprint: "New > Blueprint" in the Render dashboard and point it at this repo.
+# Secret values are NOT stored here (sync: false means "ask me in the dashboard").
+services:
+  - type: web
+    name: po-approvals
+    runtime: docker
+    plan: free
+    region: singapore
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: SECRET_KEY
+        generateValue: true
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: STORAGE_BUCKET
+        value: po-pdfs
+      - key: OCR_ENABLED
+        value: "true"
+      - key: SESSION_COOKIE_SECURE
+        value: "true"
+      - key: LOG_LEVEL
+        value: INFO

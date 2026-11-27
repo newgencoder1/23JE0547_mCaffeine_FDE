@@ -190,7 +190,7 @@ def _insert_lines(po_id, lines):
             "line_total_paise) VALUES (%s, %s, %s, %s, %s, %s, %s)",
             (
                 po_id, n, line["sku"], line["description"],
-                None if line["quantity"] is None else str(line["quantity"]),
+                line["quantity"],  # Decimal -> NUMERIC, exact
                 line["unit_price_paise"], line["line_total_paise"],
             ),
         )

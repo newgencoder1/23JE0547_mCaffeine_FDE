@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Purchase order · PO Approvals</title>
+  <link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+  <header class="top"><a href="/">PEP Brands · PO Approvals</a><div id="userbar"></div></header>
+  <main>
+    <p><a href="/" class="small">← All purchase orders</a></p>
+    <div id="banners"></div>
+
+    <section class="card">
+      <div class="actions" style="justify-content:space-between">
+        <h1 id="title">Purchase order</h1>
+        <div id="status"></div>
+      </div>
+      <p class="small muted" id="meta"></p>
+    </section>
+
+    <section class="card">
+      <h2>Details</h2>
+      <div class="grid">
+        <div><label for="po_number">PO number</label><input id="po_number" data-field="po_number"><div class="err-text" data-err="po_number"></div></div>
+        <div><label for="po_date">PO date (DD-MM-YYYY)</label><input id="po_date" data-field="po_date" placeholder="15-11-2026"><div class="err-text" data-err="po_date"></div></div>
+        <div><label for="vendor_name">Vendor name</label><input id="vendor_name" data-field="vendor_name"><div class="err-text" data-err="vendor_name"></div></div>
+        <div><label for="total">PO total (₹)</label><input id="total" data-field="total" placeholder="1,24,500.00"><div class="err-text" data-err="total"></div></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Line items</h2>
+      <table class="items">
+        <thead><tr><th>#</th><th>SKU</th><th>Description</th><th class="num">Quantity</th><th class="num">Unit price (₹)</th><th class="num">Line total (₹)</th><th></th></tr></thead>
+        <tbody id="lines"></tbody>
+      </table>
+      <p><button id="add-line" type="button">+ Add line</button></p>
+    </section>
+
+    <section class="card">
+      <h2>Checks</h2>
+      <ul class="checks" id="checks"></ul>
+    </section>
+
+    <section class="card" id="action-card">
+      <h2>Actions</h2>
+      <div id="owner-actions" class="actions" hidden>
+        <button id="save" type="button">Save draft</button>
+        <button id="submit" class="primary" type="button">Submit for approval</button>
+        <button id="discard" type="button" hidden>Discard draft</button>
+      </div>
+      <div id="approver-actions" hidden>
+        <p><label for="remark">Remark (optional for approval, <strong>required</strong> to reject)</label>
+          <textarea id="remark" rows="2" maxlength="1000"></textarea><span class="err-text" data-err="reason"></span></p>
+        <div class="actions">
+          <button id="approve" class="approve" type="button">Approve</button>
+          <button id="reject" class="reject" type="button">Reject</button>
+        </div>
+      </div>
+      <p id="no-actions" class="muted" hidden></p>
+    </section>
+
+    <section class="card">
+      <h2>History</h2>
+      <ol class="history" id="history"></ol>
+    </section>
+  </main>
+  <script src="/static/common.js"></script>
+  <script src="/static/po.js"></script>
+</body>
+</html>
