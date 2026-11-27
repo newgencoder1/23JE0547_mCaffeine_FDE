@@ -51,6 +51,13 @@ def query_all(sql, params=()):
         return cur.fetchall()
 
 
+def execute(sql, params=()):
+    """Run a statement whose result rows we don't need (INSERT/UPDATE/DELETE)."""
+    with get_db().cursor() as cur:
+        cur.execute(sql, params)
+        return cur.rowcount
+
+
 @contextmanager
 def transaction():
     """Run a block as one all-or-nothing transaction (commit on success, else roll back)."""
