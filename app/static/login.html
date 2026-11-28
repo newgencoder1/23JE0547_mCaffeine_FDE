@@ -3,31 +3,89 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Log in · PO Approvals</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
   <link rel="stylesheet" href="/static/app.css">
   <link rel="icon" href="data:,">
 </head>
-<body>
-  <header class="top"><a href="/">PEP Brands · PO Approvals</a></header>
-  <main>
-    <div class="card login-box">
-      <h1>Log in</h1>
-      <div id="msg"></div>
-      <form id="form">
-        <p><label for="login">Username or email</label><input id="login" autocomplete="username" required></p>
-        <p><label for="password">Password</label><input id="password" type="password" autocomplete="current-password" required></p>
-        <button class="primary" type="submit">Log in</button>
-      </form>
-    </div>
-  </main>
+<body class="auth">
+  <div class="auth-wrap">
+    <section class="auth-hero">
+      <div class="brand"><span class="logo">PO</span><span>PEP Brands</span></div>
+      <div class="hero-copy">
+        <h1>Purchase order approvals, without the inbox.</h1>
+        <p>Upload a PO as a PDF, let the app read and check it, then route it for approval with a full audit trail.</p>
+        <ul class="hero-points">
+          <li><span>1</span>Reads the PDF automatically, with an OCR fallback for bad scans</li>
+          <li><span>2</span>Checks the maths and blocks duplicate PO numbers before submit</li>
+          <li><span>3</span>Records every submit, approval and rejection, permanently</li>
+        </ul>
+      </div>
+      <p class="hero-foot">FDE technical assignment · Manas Gupta · 23JE0547</p>
+    </section>
+
+    <section class="auth-panel">
+      <div class="auth-card">
+        <h2>Welcome back</h2>
+        <p class="muted">Log in with your username or email.</p>
+        <div id="msg"></div>
+        <form id="form">
+          <div class="field">
+            <label for="login">Username or email</label>
+            <input id="login" autocomplete="username" required placeholder="e.g. creator1">
+          </div>
+          <div class="field">
+            <label for="password">Password</label>
+            <div class="pw-wrap">
+              <input id="password" type="password" autocomplete="current-password" required placeholder="••••••••">
+              <button type="button" class="pw-toggle" id="pw-toggle" aria-label="Show password">Show</button>
+            </div>
+          </div>
+          <button class="primary block" type="submit" id="login-btn">Log in</button>
+        </form>
+
+        <div class="demo">
+          <div class="demo-title">Demo accounts <span class="muted">· password <code>PepDemo@2026</code></span></div>
+          <div class="demo-chips">
+            <button type="button" class="chip" data-user="creator1">creator1 <small>Creator</small></button>
+            <button type="button" class="chip" data-user="creator2">creator2 <small>Creator</small></button>
+            <button type="button" class="chip" data-user="approver1">approver1 <small>Approver</small></button>
+            <button type="button" class="chip" data-user="lead1">lead1 <small>Both</small></button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
   <script src="/static/common.js"></script>
   <script>
+    const loginInput = document.getElementById("login");
+    const pwInput = document.getElementById("password");
+    const btn = document.getElementById("login-btn");
+
+    document.getElementById("pw-toggle").onclick = (e) => {
+      const show = pwInput.type === "password";
+      pwInput.type = show ? "text" : "password";
+      e.currentTarget.textContent = show ? "Hide" : "Show";
+    };
+    document.querySelectorAll(".chip[data-user]").forEach((chip) => (chip.onclick = () => {
+      loginInput.value = chip.dataset.user;
+      pwInput.value = "PepDemo@2026";
+      btn.focus();
+    }));
+
     document.getElementById("form").onsubmit = async (e) => {
       e.preventDefault();
       const msg = document.getElementById("msg");
+      flash(msg, "");
+      btn.disabled = true; btn.textContent = "Logging in…";
       try {
-        await api("/api/login", { json: { login: document.getElementById("login").value, password: document.getElementById("password").value } });
+        await api("/api/login", { json: { login: loginInput.value, password: pwInput.value } });
         window.location.href = "/";
-      } catch (err) { flash(msg, err.error); }
+      } catch (err) {
+        flash(msg, err.error);
+        btn.disabled = false; btn.textContent = "Log in";
+      }
     };
   </script>
 </body>

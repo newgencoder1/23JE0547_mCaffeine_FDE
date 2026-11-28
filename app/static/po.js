@@ -3,17 +3,20 @@ const HEADER_FIELDS = ["po_number", "po_date", "vendor_name", "total"];
 const LINE_FIELDS = ["sku", "description", "quantity", "unit_price", "line_total"];
 let po, me;
 
-function fmtPaise(p) {
-  if (p === null || p === undefined) return "";
-  const rupees = Math.floor(Math.abs(p) / 100).toLocaleString("en-IN");
-  return `${p < 0 ? "-" : ""}${rupees}.${String(Math.abs(p) % 100).padStart(2, "0")}`;
-}
-
 function banner(message, kind = "error") {
   const el = document.createElement("div");
   el.className = `alert alert-${kind}`;
-  el.textContent = message;
+  const text = document.createElement("span");
+  text.textContent = message;
+  const close = document.createElement("button");
+  close.type = "button";
+  close.className = "alert-close";
+  close.setAttribute("aria-label", "Dismiss");
+  close.textContent = "×";
+  close.onclick = () => el.remove();
+  el.append(text, close);
   document.getElementById("banners").appendChild(el);
+  el.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
 function clearBanners() { document.getElementById("banners").innerHTML = ""; }
 
@@ -23,7 +26,7 @@ function lineRow(line = {}, editable = true) {
     const num = ["quantity", "unit_price", "line_total"].includes(f);
     return `<td${num ? ' class="num"' : ""}><input data-line-field="${f}" value="${esc(line[f] ?? "")}"
       ${editable ? "" : "readonly"} ${num ? 'style="text-align:right"' : ""}><div class="err-text"></div></td>`;
-  }).join("") + `<td>${editable ? '<button type="button" class="link small remove">remove</button>' : ""}</td>`;
+  }).join("") + `<td>${editable ? '<button type="button" class="icon-btn remove" title="Remove this line" aria-label="Remove this line">×</button>' : ""}</td>`;
   const rm = tr.querySelector(".remove");
   if (rm) rm.onclick = () => { tr.remove(); renumber(); };
   return tr;
@@ -100,12 +103,22 @@ function renderChecks(checks, editable) {
 
 function render() {
   const p = po.permissions;
-  document.getElementById("title").textContent = po.po_number ? `PO ${po.po_number}` : "Purchase order (no number yet)";
+  document.getElementById("title").textContent = po.po_number ? po.po_number : "No PO number yet";
   document.getElementById("status").innerHTML = statusBadge(po.status);
+  document.getElementById("hero-total").textContent = po.total ? `₹${po.total}` : "—";
   const methodText = { text_layer: "read from the PDF's text layer", ocr: "read with OCR", manual: "entered by hand" }[po.extraction_method] || po.extraction_method;
   document.getElementById("meta").innerHTML =
-    `Created by <strong>${esc(po.created_by)}</strong> · Extraction method: <strong>${esc(po.extraction_method)}</strong> (${esc(methodText)})` +
-    (po.has_pdf ? ` · <a href="/api/pos/${po.id}/pdf" target="_blank" rel="noopener">Open original PDF${po.pdf_filename ? " (" + esc(po.pdf_filename) + ")" : ""}</a>` : "");
+    `<span class="meta-item">Created by <strong>${esc(po.created_by)}</strong>${po.is_own ? " (you)" : ""}</span>` +
+    `<span class="meta-item">Vendor <strong>${esc(po.vendor_name || "—")}</strong></span>` +
+    `<span class="pill pill-${esc(po.extraction_method)}" title="${esc(methodText)}">Extraction method: ${esc(po.extraction_method)}</span>` +
+    (po.has_pdf ? `<a class="pdf-link" href="/api/pos/${po.id}/pdf" target="_blank" rel="noopener">${ICONS.file}<span>Open original PDF</span>` +
+      `${po.pdf_filename ? `<small>${esc(po.pdf_filename)}</small>` : ""}</a>` : "");
+  renderStepper();
+  document.getElementById("edit-hint").innerHTML = p.can_edit
+    ? "Editable — fix anything highlighted in red"
+    : `<span class="lock-hint">${ICONS.lock} Read-only</span>`;
+  document.getElementById("lines-count").textContent =
+    po.line_items.length ? `${po.line_items.length} line${po.line_items.length === 1 ? "" : "s"}` : "";
 
   HEADER_FIELDS.forEach((f) => {
     const input = document.getElementById(f);
@@ -130,19 +143,41 @@ function render() {
   const anything = p.can_edit || p.can_decide;
   none.hidden = anything;
   if (!anything) {
-    none.textContent =
+    const text =
       po.status === "APPROVED" ? "Approved — this purchase order is final and locked." :
       po.status === "SUBMITTED" && po.is_own ? "Submitted — waiting for an approver (you cannot approve your own PO)." :
       po.status === "SUBMITTED" ? "Submitted — waiting for a decision." :
       "No actions available.";
+    none.innerHTML = `${ICONS.lock}<span>${esc(text)}</span>`;
   }
 
   const hist = document.getElementById("history");
   hist.innerHTML = po.history.length
-    ? po.history.map((h) => `<li><strong>${esc(h.action)}</strong> by ${esc(h.by)} · ${esc(showDateTime(h.at))}
-        <span class="muted small">(${esc(h.from_status)} → ${esc(h.to_status)})</span>
-        ${h.remark ? `<div class="small">${h.action === "REJECT" ? "Reason" : "Remark"}: ${esc(h.remark)}</div>` : ""}</li>`).join("")
-    : `<li class="muted">No actions yet. History starts when the PO is submitted.</li>`;
+    ? po.history.map((h) => `<li class="h-${esc(h.action).toLowerCase()}">
+        <div class="h-head"><span class="h-action">${esc(h.action)}</span><span class="h-by">by <strong>${esc(h.by)}</strong></span></div>
+        <div class="h-meta">${esc(showDateTime(h.at))} · ${esc(h.from_status)} → ${esc(h.to_status)}</div>
+        ${h.remark ? `<div class="h-remark"><span>${h.action === "REJECT" ? "Reason" : "Remark"}</span>${esc(h.remark)}</div>` : ""}</li>`).join("")
+    : `<li class="muted empty-h">No actions yet. History starts when the PO is submitted.</li>`;
+}
+
+// Draft -> Submitted -> Approved / Rejected, drawn from the current status.
+function renderStepper() {
+  const s = po.status;
+  const decided = s === "APPROVED" || s === "REJECTED";
+  const resubmitted = po.history.some((h) => h.action === "RESUBMIT");
+  const steps = [
+    { label: "Draft", sub: "Uploaded and checked", state: "done" },
+    { label: resubmitted ? "Resubmitted" : "Submitted", sub: decided ? "Sent to an approver" : "Waiting for an approver", state: s === "DRAFT" ? "todo" : decided ? "done" : "current" },
+    {
+      label: s === "REJECTED" ? "Rejected" : "Approved",
+      sub: s === "REJECTED" ? "Creator can fix and resubmit" : s === "APPROVED" ? "Final and locked" : "Approver decides",
+      state: s === "APPROVED" ? "done ok" : s === "REJECTED" ? "bad" : "todo",
+    },
+  ];
+  if (s === "DRAFT") steps[0].state = "current";
+  document.getElementById("stepper").innerHTML = steps.map((st, i) => `
+    <li class="step ${st.state}"><span class="dot">${st.state.includes("done") ? "✓" : st.state === "bad" ? "✕" : i + 1}</span>
+      <span class="step-text"><strong>${st.label}</strong><small>${st.sub}</small></span></li>`).join("");
 }
 
 async function save({ quiet = false } = {}) {

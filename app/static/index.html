@@ -3,25 +3,47 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Purchase orders · PO Approvals</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
   <link rel="stylesheet" href="/static/app.css">
   <link rel="icon" href="data:,">
 </head>
 <body>
-  <header class="top"><a href="/">PEP Brands · PO Approvals</a><div id="userbar"></div></header>
+  <header class="top">
+    <a href="/" class="brand"><span class="logo">PO</span><span>PEP Brands <em>PO Approvals</em></span></a>
+    <div id="userbar"></div>
+  </header>
   <main>
+    <div class="page-head">
+      <div>
+        <h1>Purchase orders</h1>
+        <p class="muted" id="subtitle">Loading…</p>
+      </div>
+    </div>
     <div id="msg"></div>
 
-    <section class="card" id="upload-card" hidden>
-      <h2>Upload a purchase order</h2>
-      <p class="muted small">PDF only, up to 5 MB. Digital PDFs are read automatically; scans open an empty form for you to fill in.</p>
-      <form id="upload-form" class="actions">
-        <input type="file" id="file" accept="application/pdf,.pdf" required style="max-width:360px">
-        <button class="primary" type="submit" id="upload-btn">Upload and read</button>
+    <div class="stats" id="stats"></div>
+
+    <section class="card upload-card" id="upload-card" hidden>
+      <form id="upload-form">
+        <label class="dropzone" id="dropzone" for="file">
+          <input type="file" id="file" accept="application/pdf,.pdf" class="sr-only">
+          <span class="dz-icon" id="dz-icon"></span>
+          <span class="dz-text">
+            <strong id="dz-title">Drop a PO PDF here, or <u>browse</u></strong>
+            <span class="muted small" id="dz-hint">PDF only, up to 5 MB. Digital PDFs are read automatically; scans open an empty form for you to fill in.</span>
+          </span>
+        </label>
+        <button class="primary" type="submit" id="upload-btn" disabled>Upload and read</button>
       </form>
     </section>
 
-    <section class="card">
-      <div class="tabs" id="tabs"></div>
+    <section class="card list-card">
+      <div class="list-toolbar">
+        <div class="tabs" id="tabs"></div>
+        <input type="search" id="search" placeholder="Search PO number, vendor or creator" aria-label="Search purchase orders">
+      </div>
       <div id="list"></div>
     </section>
   </main>
