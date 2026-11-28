@@ -1,0 +1,62 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 4 0 R /F2 5 0 R >> >> /Contents 6 0 R >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+6 0 obj
+<< /Length 1318 >>
+stream
+BT /F2 16 Tf 246.07 781.89 Td (PEP BRANDS) Tj ET
+BT /F2 12 Tf 240.97 763.89 Td (PURCHASE ORDER) Tj ET
+40 741.89 m 555.28 741.89 l S
+BT /F1 10 Tf 45.00 723.89 Td (PO Number : PO-2026-111) Tj ET
+BT /F1 10 Tf 340.00 723.89 Td (PO Date : 25-11-2026) Tj ET
+BT /F1 10 Tf 45.00 707.89 Td (Vendor    : Sunrise Packaging Co.) Tj ET
+BT /F1 10 Tf 101.00 693.89 Td (Gala 7, Bhiwandi, Thane) Tj ET
+40 681.89 m 555.28 681.89 l S
+BT /F2 10 Tf 45.00 665.89 Td (SKU) Tj ET
+BT /F2 10 Tf 110.00 665.89 Td (Description) Tj ET
+BT /F2 10 Tf 300.00 665.89 Td (Qty) Tj ET
+BT /F2 10 Tf 396.66 665.89 Td (Unit Price) Tj ET
+BT /F2 10 Tf 510.54 665.89 Td (Amount) Tj ET
+BT /F1 10 Tf 45.00 649.89 Td (PK-110) Tj ET
+BT /F1 10 Tf 110.00 649.89 Td (Amber Bottle 200ml) Tj ET
+BT /F1 10 Tf 324.44 649.89 Td (0) Tj ET
+BT /F1 10 Tf 397.20 649.89 Td (Rs. 12.50) Tj ET
+BT /F1 10 Tf 507.76 649.89 Td (Rs. 0.00) Tj ET
+BT /F1 10 Tf 45.00 633.89 Td (PK-215) Tj ET
+BT /F1 10 Tf 110.00 633.89 Td (Flip Cap 24mm) Tj ET
+BT /F1 10 Tf 307.76 633.89 Td (2000) Tj ET
+BT /F1 10 Tf 402.76 633.89 Td (Rs. 3.20) Tj ET
+BT /F1 10 Tf 488.30 633.89 Td (Rs. 6,400.00) Tj ET
+40 621.89 m 555.28 621.89 l S
+BT /F2 11 Tf 379.48 603.89 Td (PO TOTAL :) Tj ET
+BT /F2 11 Tf 482.63 603.89 Td (Rs. 6,400.00) Tj ET
+BT /F1 10 Tf 45.00 563.89 Td (Authorised Signatory: ______________) Tj ET
+endstream
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000257 00000 n 
+0000000354 00000 n 
+0000000456 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+1826
+%%EOF
