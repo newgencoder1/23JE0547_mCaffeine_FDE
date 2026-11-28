@@ -1,18 +1,23 @@
-# AI session transcript
+# AI session transcripts
 
-This project was built in a single Claude (claude.ai) chat session.
+The project was built with Claude in two sessions.
 
-* **Share link:** REPLACE-WITH-SHARE-LINK
-* **Unedited export:** `claude_session_export.md` in this folder (exported from the chat, no edits)
+## Session 1: build (claude.ai chat)
 
-How to add it (do this last, after the final commit of code):
+The app (code, tests, README, project brief) was built in a claude.ai chat session.
+A public share link for that chat could not be created from my account, so it is not included here.
+The commit history shows the order in which the work was done.
 
-1. In the Claude chat, use **Share** to create a link and paste it above.
-2. Export or copy the **whole** conversation and save it unedited as `ai-session/claude_session_export.md`.
-3. `git add ai-session && git commit -m "Add unedited AI session export" && git push`
+## Session 2: deployment and finishing (Claude Code)
 
-## Session 2: deployment (Claude Code)
+* **Export:** `claude_code_session.jsonl` in this folder: the raw transcript from the Claude desktop app's session export, one JSON message per line.
+* **Redactions:** my email address and the old Supabase keys, database passwords and session secret were replaced with `[REDACTED]` everywhere they appear. Nothing else was edited.
 
-* **Export:** `claude_code_session.jsonl` in this folder: the raw transcript from the Claude desktop app's session export, one JSON message per line. The only change is that my email address and the old Supabase keys and database password were replaced with `[REDACTED]` (16 places). Nothing else was edited.
+A second session was used because the first chat could not reach my machine, GitHub, Render or the live app. In it, Claude Code:
 
-A second session was used because the first chat could not reach my machine, GitHub, Render or the live app. It pushed the existing commits, guided the Supabase and Render setup, ran the live checks, and updated the README with the live URL. Secrets shown during that session were replaced afterwards and no longer work.
+* pushed the existing commits and guided the Supabase and Render setup;
+* ran the live checks against the deployed app (401, 403, 404, 409, reject reason, resubmit, history, OCR fallback, signed PDF link);
+* fixed a double-click bug on the Submit button and redesigned the three pages (HTML/CSS/JS only, no backend changes);
+* added three demo PO PDFs in `samples/demo/` and updated the README with the live URL.
+
+Secrets shown during that session were replaced afterwards and no longer work.
