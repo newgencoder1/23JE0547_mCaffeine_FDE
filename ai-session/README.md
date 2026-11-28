@@ -1,6 +1,6 @@
 # AI session transcripts
 
-The project was built with Claude in two sessions.
+The project was built with Claude in two sessions. **Start with [`PROCESS_NOTES.md`](PROCESS_NOTES.md)** for a one-page summary of how the problem was broken down, which AI mistakes were caught and fixed, and what was checked on the live app.
 
 ## Session 1: build (claude.ai chat)
 
