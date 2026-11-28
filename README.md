@@ -40,7 +40,7 @@ Screenshots of these flows are in [`docs/screenshots/`](docs/screenshots/), and 
 ## 2. Run locally
 
 ```bash
-git clone https://github.com/<you>/23JE0547_mCaffeine_FDE && cd 23JE0547_mCaffeine_FDE
+git clone https://github.com/newgencoder1/23JE0547_mCaffeine_FDE && cd 23JE0547_mCaffeine_FDE
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env            # fill in values (Supabase → Project Settings → Database / API)
